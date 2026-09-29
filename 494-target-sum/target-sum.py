@@ -1,20 +1,17 @@
 class Solution:
     def findTargetSumWays(self, nums: List[int], target: int) -> int:
-        total = sum(nums)
+        dp = {}
 
-        if total < abs(target):
-            return 0
+        def find( n , sum):
+            if n == 0 :
+                if sum == target : return 1
+                else: return 0
+            if (n , sum ) in dp :
+                return dp[(n, sum)]
+            
+            add = find( n -1 , sum +nums[n-1])
+            subtract = find(n-1 , sum  - nums[n-1])
 
-        if (total + target) % 2 != 0:
-            return 0
-
-        tar = (total + target) // 2
-
-        dp = [0] * (tar + 1)
-        dp[0] = 1
-
-        for num in nums:
-            for s in range(tar, num - 1, -1):
-                dp[s] += dp[s - num]
-
-        return dp[tar]
+            dp[(n , sum )]= add + subtract
+            return dp[(n , sum )]
+        return  find(len(nums) , 0)
